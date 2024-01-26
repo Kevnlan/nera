@@ -1,19 +1,25 @@
-const express = require('express'); const MongoClient = require('mongodb').MongoClient; const bodyParser = require('body-parser');
+require('dotenv').config()
+const express = require("express");
 const app = express();
-const port = 3300;
-app.use(bodyParser.urlencoded({ extended: true }));
-
-
-const UserRoutes = require("./users/routes");
-
-app.use("/user", UserRoutes);
-
-app.get("/status", (request, response) => {
-   const status = {
-      "Status": "Running"
-   };
-
-   response.send(status);
+const port = 3000;
+const programmingLanguagesRouter = require("./routes/programmingLanguages");
+app.use(express.json());
+app.use(
+    express.urlencoded({
+        extended: true,
+    })
+);
+app.get("/", (req, res) => {
+    res.json({ message: "ok" });
 });
-
-require('./app/routes')(app, {}); app.listen(port, () => { console.log('We are live on ' + port); });
+app.use("/programming-languages", programmingLanguagesRouter);
+/* Error handler middleware */
+app.use((err, req, res, next) => {
+    const statusCode = err.statusCode || 500;
+    console.error(err.message, err.stack);
+    res.status(statusCode).json({ message: err.message });
+    return;
+});
+app.listen(port, () => {
+    console.log(`Example app listening at http://localhost:${port}`);
+});
