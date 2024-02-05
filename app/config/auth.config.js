@@ -1,3 +1,3 @@
 module.exports = {
-    secret: "kevlangat-secret-key"
-  };
+  secret: "kevlangat-secret-key"
+};
